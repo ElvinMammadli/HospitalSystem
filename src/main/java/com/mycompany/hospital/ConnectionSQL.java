@@ -33,6 +33,7 @@ public class ConnectionSQL {
     }
     protected static void disconnect(){
         con=null;
+        System.out.print("disconnect");
     }
     protected User login(User user) throws SQLException{
         connect();

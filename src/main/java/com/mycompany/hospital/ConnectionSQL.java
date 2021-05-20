@@ -21,7 +21,7 @@ public class ConnectionSQL {
     private Statement  stmt;
     private ResultSet  rs;   
     private static final String url="jdbc:sqlserver://localhost:1433;databaseName=Sifapoliklinigi_db;user=root;password=Eldeyme01";
-
+   
     
     protected static void connect() throws SQLException{
         try {

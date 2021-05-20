@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -21,7 +22,7 @@ public class ConnectionSQL {
     private Statement  stmt;
     private ResultSet  rs;   
     private static final String url="jdbc:sqlserver://localhost:1433;databaseName=Sifapoliklinigi_db;user=root;password=Eldeyme01";
-   
+
     
     protected static void connect() throws SQLException{
         try {
@@ -33,6 +34,7 @@ public class ConnectionSQL {
     }
     protected static void disconnect(){
         con=null;
+        System.out.print("disconnect");
     }
     protected User login(User user) throws SQLException{
         connect();

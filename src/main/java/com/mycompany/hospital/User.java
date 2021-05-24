@@ -12,12 +12,12 @@ package com.mycompany.hospital;
 public class User {
     private String name;
     private String surname;
-    private int passport_id;
+    private String passport_id;
     private int clinc_id;
     private int type;
     private String password;
 
-    protected User(int passport_id, String password) {
+    protected User(String passport_id, String password) {
         this.passport_id = passport_id;
         this.password = password;
     }
@@ -50,7 +50,7 @@ public class User {
         return name;
     }
 
-    protected int getPassport_id() {
+    protected String getPassport_id() {
         return passport_id;
     }
 

@@ -5,16 +5,22 @@
  */
 package com.mycompany.hospital;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author khagani
  */
 public class Login extends javax.swing.JFrame {
-
+    ConnectionSQL connectionSQL = new ConnectionSQL();
     /**
      * Creates new form Login
      */
     public Login() {
+       
         initComponents();
     }
 
@@ -33,10 +39,10 @@ public class Login extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        jTextField_Tcnumarasi = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jPasswordField_sifre = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sign In Page");
@@ -48,8 +54,6 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Hastane Yönetimi Sistemi");
-
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\azelv\\Desktop\\hospital (2).png")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -82,21 +86,17 @@ public class Login extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(51, 51, 51));
         jLabel5.setText("Tc Numarası:");
 
-        jTextField2.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(51, 51, 51));
-        jTextField2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        jTextField_Tcnumarasi.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        jTextField_Tcnumarasi.setForeground(new java.awt.Color(51, 51, 51));
+        jTextField_Tcnumarasi.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
+        jTextField_Tcnumarasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                jTextField_TcnumarasiActionPerformed(evt);
             }
         });
-
-        jTextField3.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jTextField3.setForeground(new java.awt.Color(51, 51, 51));
-        jTextField3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+        jTextField_Tcnumarasi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField_TcnumarasiKeyTyped(evt);
             }
         });
 
@@ -115,6 +115,9 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        jPasswordField_sifre.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jPasswordField_sifre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -127,15 +130,15 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField_Tcnumarasi, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addGap(57, 57, 57)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPasswordField_sifre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
                         .addGap(24, 24, 24))))
         );
         jPanel2Layout.setVerticalGroup(
@@ -147,14 +150,14 @@ public class Login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField_Tcnumarasi, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(18, 18, 18)
+                .addComponent(jPasswordField_sifre, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -172,17 +175,30 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void jTextField_TcnumarasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_TcnumarasiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_jTextField_TcnumarasiActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if(!jTextField_Tcnumarasi.getText().matches("") && !new String(this.jPasswordField_sifre.getPassword()).matches("")){
+            System.out.print(jPasswordField_sifre.getPassword());
+            User user = new User(jTextField_Tcnumarasi.getText(), new String(this.jPasswordField_sifre.getPassword()));
+            try {
+                actionlogin(user);
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else
+            System.out.println("butun alanlari doldurmaniz gerekli");
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField_TcnumarasiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField_TcnumarasiKeyTyped
+        char c=evt.getKeyChar();
+        if(!Character.isDigit(c)){
+           evt.consume();
+        }
+    }//GEN-LAST:event_jTextField_TcnumarasiKeyTyped
 
     /**
      * @param args the command line arguments
@@ -218,6 +234,27 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
+    protected void actionlogin(User user) throws SQLException{
+        user=connectionSQL.login(user);
+        switch(user.getType()){
+            case 0:
+                JOptionPane.showMessageDialog(rootPane, "Yanlis Sifre Girdiniz");
+                break;
+            case -1:
+                JOptionPane.showMessageDialog(rootPane, "Yanlis TC kimlik numarasi Girdiniz");
+                break;
+            case 1:
+                RandevuMenu randevuMenu = new RandevuMenu();
+                setVisible(false);
+                randevuMenu.setVisible(true);
+                break;
+            case 2:
+                RegistrationMenu registrationMenu= new RegistrationMenu();
+                setVisible(false);
+                registrationMenu.setVisible(true);
+        }
+    
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -228,7 +265,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JPasswordField jPasswordField_sifre;
+    private javax.swing.JTextField jTextField_Tcnumarasi;
     // End of variables declaration//GEN-END:variables
 }

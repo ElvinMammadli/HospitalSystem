@@ -27,14 +27,14 @@ public class ConnectionSQL {
     protected static void connect() throws SQLException{
         try {
             con = DriverManager.getConnection(url);
-            System.out.print("Connected\n");
+            System.out.print("Connected to Database\n");
         }catch (SQLException e){
             System.err.print(e);     
         }
     }
     protected static void disconnect(){
         con=null;
-        System.out.print("disconnect");
+        System.out.print("Disconnect from Database");
     }
     protected User login(User user) throws SQLException{
         connect();
@@ -134,11 +134,32 @@ public class ConnectionSQL {
         disconnect();
         return doctors_array;
     }
-    protected int setAppointment(Doctor doctor,User user){
+    protected ArrayList<Patient> getpatient()throws SQLException{
+        connect();
+        ArrayList<Patient> patient_array= new ArrayList<>();
+        
+        stmt=con.createStatement();
+        try{
+           rs=stmt.executeQuery("Select * from dbo.patient_T");
+           while(rs.next()){
+               Patient patient = new Patient(rs.getString("Personal_id"));
+               patient.setName(rs.getString("Name"));
+               patient.setSurname(rs.getString("Surname"));
+               patient_array.add(patient);
+           }
+        }catch(Exception e){
+        System.out.print(e);
+        }
+        disconnect();
+        return patient_array;
+    }
+    protected int deletePatient(String personal_id) throws SQLException{
+        connect();
+        stmt=con.createStatement();
+        int status=stmt.executeUpdate("Delete from dbo.patient_T where Personal_id="+personal_id);
+        disconnect();
+        return status;
     
-    
-    
-    return 1;
     
     }
 }

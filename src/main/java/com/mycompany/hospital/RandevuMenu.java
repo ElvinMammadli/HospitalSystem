@@ -6,8 +6,19 @@
 package com.mycompany.hospital;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
@@ -15,7 +26,9 @@ import javax.swing.plaf.basic.BasicButtonUI;
  * @author azelv
  */
 public class RandevuMenu extends javax.swing.JFrame {
-
+    ConnectionSQL connectionSQL= new ConnectionSQL();
+    Patient patient=null;
+    int status=0;
     /**
      * Creates new form RandevuMenu
      */
@@ -43,7 +56,6 @@ public class RandevuMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        scheduler1 = new org.mobicents.ss7.impl.clock.Scheduler();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -52,26 +64,26 @@ public class RandevuMenu extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         cards = new javax.swing.JPanel();
         card4 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextField_HastaTC = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         card3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        jComboBox_clinic = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jYearChooser1 = new com.toedter.calendar.JYearChooser();
         jMonthChooser1 = new com.toedter.calendar.JMonthChooser();
         jSpinField1 = new com.toedter.components.JSpinField();
         jLabel7 = new javax.swing.JLabel();
+        jComboBox_Time = new javax.swing.JComboBox<>();
         card2 = new javax.swing.JPanel();
         jComboBox3 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Randevu Oluşturma Menusu");
-        setPreferredSize(new java.awt.Dimension(630, 433));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -144,10 +156,15 @@ public class RandevuMenu extends javax.swing.JFrame {
 
         card4.setBackground(new java.awt.Color(0, 102, 204));
 
-        jTextField1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jTextField_HastaTC.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTextField_HastaTC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jTextField_HastaTCActionPerformed(evt);
+            }
+        });
+        jTextField_HastaTC.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField_HastaTCKeyTyped(evt);
             }
         });
 
@@ -171,7 +188,7 @@ public class RandevuMenu extends javax.swing.JFrame {
                 .addGap(78, 78, 78)
                 .addGroup(card4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField_HastaTC, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(139, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, card4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -184,10 +201,10 @@ public class RandevuMenu extends javax.swing.JFrame {
                 .addGap(111, 111, 111)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField_HastaTC, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(82, 82, 82)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
 
         cards.add(card4, "card4");
@@ -205,7 +222,12 @@ public class RandevuMenu extends javax.swing.JFrame {
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox_clinic.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox_clinic.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox_clinicActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jButton2.setText("Randevu Al");
@@ -223,35 +245,48 @@ public class RandevuMenu extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Tarih:");
 
+        jComboBox_Time.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jComboBox_Time.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" })
+        );
+        jComboBox_Time.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox_TimeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout card3Layout = new javax.swing.GroupLayout(card3);
         card3.setLayout(card3Layout);
         card3Layout.setHorizontalGroup(
             card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(card3Layout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, card3Layout.createSequentialGroup()
+                .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(card3Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, card3Layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
                         .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
                             .addGroup(card3Layout.createSequentialGroup()
                                 .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
+                                    .addComponent(jComboBox_clinic, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4)
                                     .addGroup(card3Layout.createSequentialGroup()
-                                        .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(26, 26, 26)
-                                .addComponent(jSpinField1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(80, Short.MAX_VALUE))
-                    .addGroup(card3Layout.createSequentialGroup()
-                        .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, card3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                                        .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7)
+                                            .addGroup(card3Layout.createSequentialGroup()
+                                                .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(26, 26, 26)
+                                        .addComponent(jSpinField1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE))
+                            .addGroup(card3Layout.createSequentialGroup()
+                                .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jComboBox1, 0, 201, Short.MAX_VALUE)
+                                        .addComponent(jComboBox_Time, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(55, 55, 55))
         );
         card3Layout.setVerticalGroup(
@@ -260,7 +295,7 @@ public class RandevuMenu extends javax.swing.JFrame {
                 .addGap(47, 47, 47)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBox_clinic, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(card3Layout.createSequentialGroup()
@@ -273,9 +308,11 @@ public class RandevuMenu extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jComboBox_Time, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43))
+                .addGap(33, 33, 33))
         );
 
         cards.add(card3, "card3");
@@ -311,7 +348,7 @@ public class RandevuMenu extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(292, Short.MAX_VALUE))
+                .addContainerGap(294, Short.MAX_VALUE))
         );
 
         cards.add(card2, "card2");
@@ -359,17 +396,86 @@ public class RandevuMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox3ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        cardLayout.show(cards,"card3");
-        // TODO add your handling code here:
+        if(status==1)
+            cardLayout.show(cards,"card3");
+        else{
+            if(patient==null)
+                JOptionPane.showMessageDialog(rootPane, "Hasta Tc kimlik numarasini sorgulamaniz gerekli");
+            else
+             JOptionPane.showMessageDialog(rootPane, "Sorguladigini TC kimlik numarasi sisteme kayit olmasi gerekiyor");
+           }
+        ArrayList<Clinic> clinic_array= new ArrayList<>();
+        List<String> clinic_list = new ArrayList<String>();
+        
+        try {
+            clinic_array=connectionSQL.getclinic();
+        } catch (SQLException ex) {
+            Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(int i=0; i<clinic_array.size(); i++)
+            clinic_list.add(clinic_array.get(i).getName());
+        DefaultComboBoxModel dm =new DefaultComboBoxModel(clinic_list.toArray());
+        jComboBox_clinic.setModel(dm);
+        String[] array= { "09:00", "09:30", "10:00", "10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30" };
+        dm = new DefaultComboBoxModel(array);
+        jComboBox_Time.setModel(dm);
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        if(!jTextField_HastaTC.getText().matches("")){
+            patient= new Patient(jTextField_HastaTC.getText());
+            try {
+                patient=connectionSQL.checkpatientregistration(patient);
+            } catch (SQLException ex) {
+                Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(patient.getName().matches("Null")){
+             JOptionPane.showMessageDialog(rootPane, patient.getPassport_id()+" numarali kullanici kayiti bulunamadi");
+             status=0;
+            }
+            else{
+                JOptionPane.showMessageDialog(rootPane, patient.getPassport_id()+" numarali kullanicin kayiti bulunmaktadir randevu alma islemi yapa bilirsiniz");
+            status=1;
+            }
+        }
+        else
+            JOptionPane.showConfirmDialog(rootPane, "HASTA TC kimlik numarasi bos olamaz");
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jTextField_HastaTCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_HastaTCActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextField_HastaTCActionPerformed
+
+    private void jTextField_HastaTCKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField_HastaTCKeyTyped
+       char c=evt.getKeyChar();
+       if(!Character.isDigit(c))
+           evt.consume();
+    }//GEN-LAST:event_jTextField_HastaTCKeyTyped
+
+    private void jComboBox_TimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_TimeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox_TimeActionPerformed
+
+    private void jComboBox_clinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_clinicActionPerformed
+        int i=15-9;
+        EnabledComboBoxRenderer enabledComboBoxRenderer= new EnabledComboBoxRenderer();
+        
+        
+        String a="15:00";
+        Component c=jComboBox_clinic.getComponent(0);
+        System.out.println(c);
+        setForeground(Color.red);
+        jComboBox_clinic.setComponentZOrder(c.getComponentAt(0, 0), 1);
+       
+        //jComboBox_clinic.removeItemAt(WIDTH);
+        //jComboBox_clinic.getComponent(0).setForeground(Color.red);
+        //jComboBox_Time.getComponent(i).setFont(new Font("Courier",Font.ITALIC,14));
+       // System.out.print(jComboBox_Time.getComponent(i));
+
+      //  System.out.println(jComboBox_Time.getSelectedIndex());
+       //  System.out.println(jComboBox_Time.getItemAt(i));
+    }//GEN-LAST:event_jComboBox_clinicActionPerformed
 
     /**
      * @param args the command line arguments
@@ -405,6 +511,7 @@ public class RandevuMenu extends javax.swing.JFrame {
             }
         });
     }
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel card2;
@@ -417,8 +524,9 @@ public class RandevuMenu extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
+    private javax.swing.JComboBox<String> jComboBox_Time;
+    private javax.swing.JComboBox<String> jComboBox_clinic;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -429,8 +537,7 @@ public class RandevuMenu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private com.toedter.components.JSpinField jSpinField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField_HastaTC;
     private com.toedter.calendar.JYearChooser jYearChooser1;
-    private org.mobicents.ss7.impl.clock.Scheduler scheduler1;
     // End of variables declaration//GEN-END:variables
 }

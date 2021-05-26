@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -27,14 +28,14 @@ public class ConnectionSQL {
     protected static void connect() throws SQLException{
         try {
             con = DriverManager.getConnection(url);
-            System.out.print("Connected to Database\n");
+            System.out.println("Connected to Database\n");
         }catch (SQLException e){
             System.err.print(e);     
         }
     }
     protected static void disconnect(){
         con=null;
-        System.out.print("Disconnect from Database");
+        System.out.println("Disconnect from Database");
     }
     protected User login(User user) throws SQLException{
         connect();
@@ -118,13 +119,13 @@ public class ConnectionSQL {
         disconnect();
         return clinic_array;
     }
-    protected ArrayList<Doctor> getdoctors(Doctor doctor) throws SQLException{
+    protected ArrayList<Doctor> getdoctors(Clinic clinic) throws SQLException{
         connect();
         stmt=con.createStatement();
         ArrayList<Doctor> doctors_array = new ArrayList<>();
-        rs=stmt.executeQuery("select * from doctor_t where Clinic_id="+doctor.getClinic_id());
+        rs=stmt.executeQuery("select * from doctor_t where Clinic_id="+clinic.getId());
         while(rs.next()){
-            Doctor tmp_doctor= new Doctor(doctor.getClinic_id());
+            Doctor tmp_doctor= new Doctor(clinic.getId());
             tmp_doctor.setName(rs.getString("Name"));
             tmp_doctor.setId(rs.getInt("Id"));
             tmp_doctor.setSurname(rs.getString("Surname"));
@@ -161,5 +162,27 @@ public class ConnectionSQL {
         return status;
     
     
+    }
+    protected ArrayList<String> getTime(String yy,String mm,String dd) throws SQLException{
+        ArrayList<String> time = new ArrayList<>();
+        connect();
+        stmt=con.createStatement();
+        try{
+            rs=stmt.executeQuery("select Convert(varchar, Format(Date , 'HH:mm'),0) as Date from dbo.appointment_T where (DATEPART(yy, Date) ='"+yy+"' AND DATEPART(mm, Date) ='"+mm+"' AND    DATEPART(dd, Date) = '"+dd+"')");
+            while(rs.next()){
+                System.out.println("test");
+                time.add(rs.getString("Date"));
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return time; 
+    }
+    protected int setAppointment(Clinic clinic, Doctor doctor,Patient patient,String time) throws SQLException{
+        int status=0;
+        connect();
+        stmt=con.createStatement();
+        status=stmt.executeUpdate("insert into appointment_T (Date,Patient_id,Doctor_id) values(Convert(DateTime,'"+time+"',0),+"+patient.,2)");
+        return status;
     }
 }

@@ -9,26 +9,40 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.image.ImageObserver;
 import java.sql.SQLException;
+import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.plaf.basic.BasicButtonUI;
-
 /**
  *
  * @author azelv
  */
-public class RandevuMenu extends javax.swing.JFrame {
+public class RandevuMenu extends javax.swing.JFrame{
     ConnectionSQL connectionSQL= new ConnectionSQL();
     Patient patient=null;
     int status=0;
+    ArrayList<Clinic> clinic_array= new ArrayList<>();
+
+
     /**
      * Creates new form RandevuMenu
      */
@@ -69,7 +83,7 @@ public class RandevuMenu extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         card3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox_doctor = new javax.swing.JComboBox<>();
         jComboBox_clinic = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -215,10 +229,10 @@ public class RandevuMenu extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Klinik İsmi:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        jComboBox_doctor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {  }));
+        jComboBox_doctor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                jComboBox_doctorActionPerformed(evt);
             }
         });
 
@@ -284,8 +298,8 @@ public class RandevuMenu extends javax.swing.JFrame {
                                 .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addGroup(card3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jComboBox1, 0, 201, Short.MAX_VALUE)
-                                        .addComponent(jComboBox_Time, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(jComboBox_doctor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jComboBox_Time, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(55, 55, 55))
         );
@@ -307,9 +321,9 @@ public class RandevuMenu extends javax.swing.JFrame {
                 .addGap(68, 68, 68)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBox_doctor, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jComboBox_Time, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addComponent(jComboBox_Time, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
@@ -372,24 +386,24 @@ public class RandevuMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-
         cardLayout.show(cards,"card2");
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
         cardLayout.show(cards, "card4");
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void jComboBox_doctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_doctorActionPerformed
+        
+
+
+
+    }//GEN-LAST:event_jComboBox_doctorActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
         // TODO add your handling code here:
@@ -404,16 +418,14 @@ public class RandevuMenu extends javax.swing.JFrame {
             else
              JOptionPane.showMessageDialog(rootPane, "Sorguladigini TC kimlik numarasi sisteme kayit olmasi gerekiyor");
            }
-        ArrayList<Clinic> clinic_array= new ArrayList<>();
         List<String> clinic_list = new ArrayList<String>();
-        
         try {
             clinic_array=connectionSQL.getclinic();
         } catch (SQLException ex) {
             Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(int i=0; i<clinic_array.size(); i++)
-            clinic_list.add(clinic_array.get(i).getName());
+        clinic_list.add(clinic_array.get(i).getName());
         DefaultComboBoxModel dm =new DefaultComboBoxModel(clinic_list.toArray());
         jComboBox_clinic.setModel(dm);
         String[] array= { "09:00", "09:30", "10:00", "10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30" };
@@ -454,27 +466,30 @@ public class RandevuMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField_HastaTCKeyTyped
 
     private void jComboBox_TimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_TimeActionPerformed
-        // TODO add your handling code here:
+        //((JLabel)jComboBox_Time.getComponent(0)).setForeground(Color.red);
+        ((JTextField)jComboBox_clinic.getEditor().getEditorComponent()).setForeground(Color.red);
+        //jComboBox_clinic.setEditor(anEditor);
+        //jComboBox_Time.add(test, 0);
+        //test(); 
     }//GEN-LAST:event_jComboBox_TimeActionPerformed
 
     private void jComboBox_clinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_clinicActionPerformed
-        int i=15-9;
-        EnabledComboBoxRenderer enabledComboBoxRenderer= new EnabledComboBoxRenderer();
-        
-        
-        String a="15:00";
-        Component c=jComboBox_clinic.getComponent(0);
-        System.out.println(c);
-        setForeground(Color.red);
-        jComboBox_clinic.setComponentZOrder(c.getComponentAt(0, 0), 1);
-       
-        //jComboBox_clinic.removeItemAt(WIDTH);
-        //jComboBox_clinic.getComponent(0).setForeground(Color.red);
-        //jComboBox_Time.getComponent(i).setFont(new Font("Courier",Font.ITALIC,14));
-       // System.out.print(jComboBox_Time.getComponent(i));
+        Clinic tmp = new Clinic(clinic_array.get(jComboBox_clinic.getSelectedIndex()).getId(), jComboBox_clinic.getSelectedItem().toString());
+        System.out.println(clinic_array.get(jComboBox_clinic.getSelectedIndex()).getId());
+        ArrayList<Doctor> doctor_array= new ArrayList<>();
+        try {
+            doctor_array=connectionSQL.getdoctors(tmp);
+            List<String> doctor_list = new ArrayList<String>();
+            for(int i=0; i<doctor_array.size(); i++)
+                doctor_list.add(doctor_array.get(i).getName());
+            DefaultComboBoxModel dm = new DefaultComboBoxModel(doctor_list.toArray());
+            jComboBox_doctor.setModel(dm);
+        } catch (SQLException ex) {
+            Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(doctor_array.size());
 
-      //  System.out.println(jComboBox_Time.getSelectedIndex());
-       //  System.out.println(jComboBox_Time.getItemAt(i));
+        
     }//GEN-LAST:event_jComboBox_clinicActionPerformed
 
     /**
@@ -511,7 +526,20 @@ public class RandevuMenu extends javax.swing.JFrame {
             }
         });
     }
- 
+    protected void test(){
+        int i=15-9;
+        int[] SELECTION_INTERVAL = { 0,1 };
+        int[] SELECTION_INTERVAL2 = { 2,3 };
+
+        DefaultListSelectionModel model = new DefaultListSelectionModel();
+
+        EnabledComboBoxRenderer enableRenderer = new EnabledComboBoxRenderer();
+        model.addSelectionInterval(SELECTION_INTERVAL[0],SELECTION_INTERVAL[1]);
+        model.addSelectionInterval(SELECTION_INTERVAL2[0],SELECTION_INTERVAL2[1]);
+        enableRenderer.setEnabledItems(model);
+        jComboBox_Time.setRenderer(enableRenderer);
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel card2;
@@ -523,10 +551,10 @@ public class RandevuMenu extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox_Time;
     private javax.swing.JComboBox<String> jComboBox_clinic;
+    private javax.swing.JComboBox<String> jComboBox_doctor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -540,4 +568,6 @@ public class RandevuMenu extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField_HastaTC;
     private com.toedter.calendar.JYearChooser jYearChooser1;
     // End of variables declaration//GEN-END:variables
+
+  
 }

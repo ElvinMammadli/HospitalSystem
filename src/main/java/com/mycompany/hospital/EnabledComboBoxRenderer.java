@@ -51,9 +51,10 @@ public class EnabledComboBoxRenderer extends BasicComboBoxRenderer {
                 c.setBackground(super.getBackground());
             }
            
-            c.setForeground(disabledColor);
 
         } else {
+                        c.setForeground(disabledColor);
+
             c.setBackground(super.getBackground());
             c.setForeground(super.getForeground());
         }

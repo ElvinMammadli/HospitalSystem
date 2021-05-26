@@ -395,7 +395,9 @@ public class RandevuMenu extends javax.swing.JFrame{
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        System.out.println(jYearChooser1.getYear()+" "+jMonthChooser1.getMonth()+" "+jSpinField1.getValue());
+        String test=jYearChooser1.getYear()+"-"+jMonthChooser1.getMonth()+"-"+jSpinField1.getValue()+" "+jComboBox_Time.getSelectedItem().toString()+":00";
+        System.out.println(test);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox_doctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_doctorActionPerformed

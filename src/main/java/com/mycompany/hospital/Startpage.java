@@ -21,9 +21,9 @@ public class Startpage {
   ConnectionSQL connectionSQL = new ConnectionSQL();
         ArrayList<Doctor> doctor_array = new ArrayList<>();
         Doctor doctor = new Doctor(3);
-        doctor_array=connectionSQL.getdoctors(doctor);
-        for(int i=0; i< doctor_array.size(); i++)
-            System.out.println(doctor_array.get(i).getId()+" "+doctor_array.get(i).getName()+" "+doctor_array.get(i).getSurname()+" "+doctor_array.get(i).getPersonal_id()+" ");
+        //doctor_array=connectionSQL.getdoctors(doctor);
+       // for(int i=0; i< doctor_array.size(); i++)
+       //    System.out.println(doctor_array.get(i).getId()+" "+doctor_array.get(i).getName()+" "+doctor_array.get(i).getSurname()+" "+doctor_array.get(i).getPersonal_id()+" ");
         /*ArrayList<Clinic> clinic_array = new ArrayList<>();
         clinic_array=connectionSQl.getclinic();
         System.out.println(clinic_array.size());

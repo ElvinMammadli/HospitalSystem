@@ -183,7 +183,25 @@ public class ConnectionSQL {
         connect();
         stmt=con.createStatement();
         status=stmt.executeUpdate("insert into appointment_T (Date,Patient_id,Doctor_id) values(Convert(DateTime,'"+time+"',0),+"+patient.getPassport_id()+","+doctor.getId()+")");
-        
+        disconnect();
         return status;
+    }
+    protected ArrayList<Appointment> getappointments() throws SQLException{
+        connect();
+        ArrayList<Appointment> appointment_array = new ArrayList<>();
+        stmt=con.createStatement();
+        try{
+        rs=stmt.executeQuery("Select p.Name,p.Surname,Format(Date ,'yyyy-MM-dd HH:mm') as Date,d.Name,d.Surname ,c.name from  dbo.appointment_T a, dbo.patient_T p,dbo.doctor_T d,clinic_T c where a.Patient_id=p.Personal_id and a.Doctor_id=d.Id and d.Clinic_id=c.Id");
+        while(rs.next()){
+            String patient=rs.getString(1)+" "+rs.getString(2);
+            String doctor=rs.getString(4)+" "+rs.getString(5);
+            Appointment appointment =new Appointment(patient,rs.getString("Date") , doctor, rs.getString("name"));
+            appointment_array.add(appointment);
+        }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        disconnect();
+        return appointment_array;
     }
 }

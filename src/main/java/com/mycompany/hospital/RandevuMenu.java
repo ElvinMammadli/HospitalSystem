@@ -15,6 +15,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.image.ImageObserver;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author azelv
@@ -99,7 +101,7 @@ public class RandevuMenu extends javax.swing.JFrame{
         jLabel11 = new javax.swing.JLabel();
         card2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable_appointment = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Randevu Oluşturma Menusu");
@@ -375,7 +377,7 @@ public class RandevuMenu extends javax.swing.JFrame{
 
         card2.setBackground(new java.awt.Color(0, 102, 204));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTable_appointment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -398,9 +400,9 @@ public class RandevuMenu extends javax.swing.JFrame{
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
+        jScrollPane1.setViewportView(jTable_appointment);
+        if (jTable_appointment.getColumnModel().getColumnCount() > 0) {
+            jTable_appointment.getColumnModel().getColumn(3).setResizable(false);
         }
 
         javax.swing.GroupLayout card2Layout = new javax.swing.GroupLayout(card2);
@@ -436,6 +438,28 @@ public class RandevuMenu extends javax.swing.JFrame{
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         cardLayout.show(cards,"card2");
+        ArrayList<Appointment> appointment_array;
+            try {
+                appointment_array = connectionSQL.getappointments();
+                if(appointment_array!=null){
+            Object row[][] = new Object[appointment_array.size()][4];
+            for(int i=0; i<appointment_array.size(); i++){
+                row[i][0]=appointment_array.get(i).getClinic_name();
+                row[i][1]=appointment_array.get(i).getDoctor_namesurname();
+                row[i][2]=appointment_array.get(i).getPatient_namesurname();
+                row[i][3]=appointment_array.get(i).getDate();
+            }
+             jTable_appointment.setModel(new DefaultTableModel(row,new String[]{"Klinik","Doktor","Hasta","Tarih"}));
+
+
+        }
+        else{
+             jTable_appointment.setModel(new DefaultTableModel(null,new String[]{"Klinik","Doktor","Hasta","Tarih"}));
+        }
+            } catch (SQLException ex) {
+                Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -652,7 +676,7 @@ public class RandevuMenu extends javax.swing.JFrame{
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private com.toedter.components.JSpinField jSpinField1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable_appointment;
     private javax.swing.JTextField jTextField_HastaTC;
     private com.toedter.calendar.JYearChooser jYearChooser1;
     // End of variables declaration//GEN-END:variables

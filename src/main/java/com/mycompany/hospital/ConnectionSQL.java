@@ -163,12 +163,12 @@ public class ConnectionSQL {
     
     
     }
-    protected ArrayList<String> getTime(String yy,String mm,String dd) throws SQLException{
+    protected ArrayList<String> getTime(String yy,String mm,String dd,Doctor doctor) throws SQLException{
         ArrayList<String> time = new ArrayList<>();
         connect();
         stmt=con.createStatement();
         try{
-            rs=stmt.executeQuery("select Convert(varchar, Format(Date , 'HH:mm'),0) as Date from dbo.appointment_T where (DATEPART(yy, Date) ='"+yy+"' AND DATEPART(mm, Date) ='"+mm+"' AND    DATEPART(dd, Date) = '"+dd+"')");
+            rs=stmt.executeQuery("select Convert(varchar, Format(Date , 'HH:mm'),0) as Date from dbo.appointment_T where (DATEPART(yy, Date) ='"+yy+"' AND DATEPART(mm, Date) ='"+mm+"' AND    DATEPART(dd, Date) = '"+dd+"') AND Doctor_id="+doctor.getId());
             while(rs.next()){
                 System.out.println("test");
                 time.add(rs.getString("Date"));
@@ -178,11 +178,12 @@ public class ConnectionSQL {
         }
         return time; 
     }
-    protected int setAppointment(Clinic clinic, Doctor doctor,Patient patient,String time) throws SQLException{
+    protected int setAppointment( Doctor doctor,Patient patient,String time) throws SQLException{
         int status=0;
         connect();
         stmt=con.createStatement();
-        status=stmt.executeUpdate("insert into appointment_T (Date,Patient_id,Doctor_id) values(Convert(DateTime,'"+time+"',0),+"+patient.,2)");
+        status=stmt.executeUpdate("insert into appointment_T (Date,Patient_id,Doctor_id) values(Convert(DateTime,'"+time+"',0),+"+patient.getPassport_id()+","+doctor.getId()+")");
+        
         return status;
     }
 }

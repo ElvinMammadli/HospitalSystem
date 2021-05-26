@@ -41,6 +41,7 @@ public class RandevuMenu extends javax.swing.JFrame{
     Patient patient=null;
     int status=0;
     ArrayList<Clinic> clinic_array= new ArrayList<>();
+    ArrayList<Doctor> doctor_array= new ArrayList<>();
 
 
     /**
@@ -437,8 +438,18 @@ public class RandevuMenu extends javax.swing.JFrame{
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         System.out.println(jYearChooser1.getYear()+" "+jMonthChooser1.getMonth()+" "+jSpinField1.getValue());
-        String test=jYearChooser1.getYear()+"-"+jMonthChooser1.getMonth()+"-"+jSpinField1.getValue()+" "+jComboBox_Time.getSelectedItem().toString()+":00";
+        String test=jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" "+jComboBox_Time.getSelectedItem().toString()+":00";
         System.out.println(test);
+        int status=0;
+        Doctor doctor =null;
+        doctor=doctor_array.get(jComboBox_doctor.getSelectedIndex());
+        try {
+            status=connectionSQL.setAppointment(doctor, patient, test);
+        } catch (SQLException ex) {
+            Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(status!=0)
+            JOptionPane.showMessageDialog(rootPane, "randevu alindi");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox_doctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_doctorActionPerformed
@@ -511,7 +522,6 @@ public class RandevuMenu extends javax.swing.JFrame{
     private void jComboBox_clinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_clinicActionPerformed
         Clinic tmp = new Clinic(clinic_array.get(jComboBox_clinic.getSelectedIndex()).getId(), jComboBox_clinic.getSelectedItem().toString());
         System.out.println(clinic_array.get(jComboBox_clinic.getSelectedIndex()).getId());
-        ArrayList<Doctor> doctor_array= new ArrayList<>();
         try {
             doctor_array=connectionSQL.getdoctors(tmp);
             List<String> doctor_list = new ArrayList<String>();
@@ -528,15 +538,23 @@ public class RandevuMenu extends javax.swing.JFrame{
     }//GEN-LAST:event_jComboBox_clinicActionPerformed
 
     private void jComboBox_TimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_TimeActionPerformed
-        //((JLabel)jComboBox_Time.getComponent(0)).setForeground(Color.red);
-        ((JTextField)jComboBox_clinic.getEditor().getEditorComponent()).setForeground(Color.red);
-        //jComboBox_clinic.setEditor(anEditor);
-        //jComboBox_Time.add(test, 0);
-        //test();
     }//GEN-LAST:event_jComboBox_TimeActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+        Doctor doctor= doctor_array.get(jComboBox_doctor.getSelectedIndex());
+        int c=jYearChooser1.getYear();
+        String test =String.valueOf(c);
+        ArrayList<String> time=null;
+        try {
+            time = connectionSQL.getTime(String.valueOf(jYearChooser1.getYear()),String.valueOf(jMonthChooser1.getMonth()+1),String.valueOf(jSpinField1.getValue()),doctor);
+        } catch (SQLException ex) {
+            Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(time.size());
+        if(time.size()>0)
+            setdisableindex(time);
+        else
+            System.out.println("else");
     }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
@@ -573,17 +591,33 @@ public class RandevuMenu extends javax.swing.JFrame{
             }
         });
     }
-    protected void test(){
-        int i=15-9;
-        int[] SELECTION_INTERVAL = { 0,1 };
-        int[] SELECTION_INTERVAL2 = { 2,3 };
-
+    protected void  setdisableindex(ArrayList<String> time){
+        int index;
         DefaultListSelectionModel model = new DefaultListSelectionModel();
-
         EnabledComboBoxRenderer enableRenderer = new EnabledComboBoxRenderer();
-        model.addSelectionInterval(SELECTION_INTERVAL[0],SELECTION_INTERVAL[1]);
+            for(int i=0; i<time.size(); i++){
+            if(time.get(i).contains(":30")){
+               System.out.println("bucuk");
+               String [] hourMin=time.get(i).split(":");
+               float hour =Float.parseFloat(hourMin[0]);
+               System.out.println(hour);
+               hour+=0.5;
+               index = (int) ((hour-9)*2);
+               System.out.println(hour+" "+index);
+            }
+            else{
+                System.out.println("tam");
+                String [] hourMin=time.get(i).split(":");
+                int hour=Integer.parseInt(hourMin[0]);
+                index =(hour-9)*2;
+                System.out.println(hour+" "+index);
+            }
+            int[] SELECTION_INTERVAL2 = { index,index };
+        
+
         model.addSelectionInterval(SELECTION_INTERVAL2[0],SELECTION_INTERVAL2[1]);
         enableRenderer.setEnabledItems(model);
+        }
         jComboBox_Time.setRenderer(enableRenderer);
         
     }

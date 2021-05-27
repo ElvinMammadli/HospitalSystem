@@ -39,18 +39,19 @@ import javax.swing.table.DefaultTableModel;
  * @author azelv
  */
 public class RandevuMenu extends javax.swing.JFrame{
-    ConnectionSQL connectionSQL= new ConnectionSQL();
-    Patient patient=null;
-    int status=0;
-    ArrayList<Clinic> clinic_array= new ArrayList<>();
-    ArrayList<Doctor> doctor_array= new ArrayList<>();
-
+    protected ConnectionSQL connectionSQL= new ConnectionSQL();
+    protected Patient patient=null;
+    protected int status=0;
+    protected ArrayList<Clinic> clinic_array= new ArrayList<>();
+    protected ArrayList<Doctor> doctor_array= new ArrayList<>();
+    protected static Appointment_employee appointment_employee;
 
     /**
      * Creates new form RandevuMenu
      */
     CardLayout cardLayout;
-    public RandevuMenu() {
+    public RandevuMenu(Appointment_employee appointment_employee) {
+        this.appointment_employee=appointment_employee;
         initComponents();
         Component []  components =this.getContentPane().getComponents();
         for(Component component: components){
@@ -476,13 +477,11 @@ public class RandevuMenu extends javax.swing.JFrame{
         int status=0;
         Doctor doctor =null;
         doctor=doctor_array.get(jComboBox_doctor.getSelectedIndex());
-        try {
-            status=connectionSQL.setAppointment(doctor, patient, date, time);
-        } catch (SQLException ex) {
-            Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        status=appointment_employee.setAppointment(doctor,patient,date,time);
         if(status!=0)
             JOptionPane.showMessageDialog(rootPane, "randevu alindi");
+        else
+            JOptionPane.showMessageDialog(rootPane,"Randevu alinamadi");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox_doctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_doctorActionPerformed
@@ -508,7 +507,8 @@ public class RandevuMenu extends javax.swing.JFrame{
             Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(int i=0; i<clinic_array.size(); i++)
-        clinic_list.add(clinic_array.get(i).getName());
+            clinic_list.add(clinic_array.get(i).getName());
+        
         DefaultComboBoxModel dm =new DefaultComboBoxModel(clinic_list.toArray());
         jComboBox_clinic.setModel(dm);
         String[] array= { "09:00", "09:30", "10:00", "10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30" };
@@ -520,11 +520,7 @@ public class RandevuMenu extends javax.swing.JFrame{
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         if(!jTextField_HastaTC.getText().matches("")){
             patient= new Patient(jTextField_HastaTC.getText());
-            try {
-                patient=connectionSQL.checkpatientregistration(patient);
-            } catch (SQLException ex) {
-                Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            patient=appointment_employee.checkpatientregistration(patient);
             if(patient.getName().matches("Null")){
              JOptionPane.showMessageDialog(rootPane, patient.getPassport_id()+" numarali kullanici kayiti bulunamadi");
              status=0;
@@ -571,15 +567,8 @@ public class RandevuMenu extends javax.swing.JFrame{
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         Doctor doctor= doctor_array.get(jComboBox_doctor.getSelectedIndex());
-        int c=jYearChooser1.getYear();
-        String test =String.valueOf(c);
         ArrayList<String> time=null;
-        try {
-            time = connectionSQL.getTime(String.valueOf(jYearChooser1.getYear()),String.valueOf(jMonthChooser1.getMonth()+1),String.valueOf(jSpinField1.getValue()),doctor);
-        } catch (SQLException ex) {
-            Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println(time.size());
+        time=appointment_employee.getTime(String.valueOf(jYearChooser1.getYear()),String.valueOf(jMonthChooser1.getMonth()+1),String.valueOf(jSpinField1.getValue()),doctor);
         if(time.size()>0)
             setdisableindex(time);
         else
@@ -616,7 +605,7 @@ public class RandevuMenu extends javax.swing.JFrame{
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RandevuMenu().setVisible(true);
+                new RandevuMenu(appointment_employee).setVisible(true);
             }
         });
     }

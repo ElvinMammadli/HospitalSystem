@@ -22,11 +22,13 @@ import javax.swing.plaf.basic.BasicButtonUI;
  * @author azelv
  */
 public class RegistrationMenu extends javax.swing.JFrame {
-    ConnectionSQL connectionSQL=new ConnectionSQL();
+    protected ConnectionSQL connectionSQL=new ConnectionSQL();
+    protected static Registration_employee registration_employee;
     /**
      * Creates new form DoctorMenu
      */    CardLayout cardLayout;
-    public RegistrationMenu() {
+    public RegistrationMenu(Registration_employee registration_employee) {
+        this.registration_employee=registration_employee;
         initComponents();
         Component []  components =this.getContentPane().getComponents();
         for(Component component: components){
@@ -271,13 +273,8 @@ public class RegistrationMenu extends javax.swing.JFrame {
            Patient patient = new Patient(jTextField_HastaTc.getText());
            patient.setName(jTextField_Name.getText());
            patient.setSurname(jTextField_Surname.getText());
-           int i = 0;
-           try {
-               i = connectionSQL.registerpatient(patient);
-           } catch (SQLException ex) {
-               Logger.getLogger(RegistrationMenu.class.getName()).log(Level.SEVERE, null, ex);
-           }
-           if(i==1)
+           int status=registration_employee.registerpatient(patient);
+           if(status==1)
                JOptionPane.showMessageDialog(rootPane, "kullaniici eklendi");
            else
                JOptionPane.showMessageDialog(rootPane, "kullanici eklenemedi");
@@ -287,14 +284,9 @@ public class RegistrationMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String x = String.valueOf(jComboBox_kullanicilar.getSelectedItem());
-        System.out.println(x);
-        int status=0;
-        try {
-            status = connectionSQL.deletePatient(x);
-        } catch (SQLException ex) {
-            Logger.getLogger(RegistrationMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String patient = String.valueOf(jComboBox_kullanicilar.getSelectedItem());
+        
+        int status=registration_employee.deletePatient(patient);
         if(status==1)
             JOptionPane.showMessageDialog(rootPane, "Kullanici basariyla silindi");
         else
@@ -334,7 +326,7 @@ public class RegistrationMenu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RegistrationMenu().setVisible(true);
+                new RegistrationMenu(registration_employee).setVisible(true);
             }
         });
     }

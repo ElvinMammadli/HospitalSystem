@@ -168,21 +168,21 @@ public class ConnectionSQL {
         connect();
         stmt=con.createStatement();
         try{
-            rs=stmt.executeQuery("select Convert(varchar, Format(Date , 'HH:mm'),0) as Date from dbo.appointment_T where (DATEPART(yy, Date) ='"+yy+"' AND DATEPART(mm, Date) ='"+mm+"' AND    DATEPART(dd, Date) = '"+dd+"') AND Doctor_id="+doctor.getId());
+            rs=stmt.executeQuery("select cast(Time as nvarchar(5)) as Time from dbo.appointment_T where (DATEPART(yy, Date) ='"+yy+"' AND DATEPART(mm, Date) ='"+mm+"' AND    DATEPART(dd, Date) = '"+dd+"') AND Doctor_id="+doctor.getId());
             while(rs.next()){
                 System.out.println("test");
-                time.add(rs.getString("Date"));
+                time.add(rs.getString("Time"));
             }
         }catch(Exception e){
             System.out.println(e);
         }
         return time; 
     }
-    protected int setAppointment( Doctor doctor,Patient patient,String time) throws SQLException{
+    protected int setAppointment( Doctor doctor,Patient patient,String date,String time) throws SQLException{
         int status=0;
         connect();
         stmt=con.createStatement();
-        status=stmt.executeUpdate("insert into appointment_T (Date,Patient_id,Doctor_id) values(Convert(DateTime,'"+time+"',0),+"+patient.getPassport_id()+","+doctor.getId()+")");
+        status=stmt.executeUpdate("insert into appointment_T  values(Convert(Date,'"+date+"',0),cast('"+time+"' as Time),'"+patient.getPassport_id()+"',"+doctor.getId()+")");
         disconnect();
         return status;
     }
@@ -191,11 +191,11 @@ public class ConnectionSQL {
         ArrayList<Appointment> appointment_array = new ArrayList<>();
         stmt=con.createStatement();
         try{
-        rs=stmt.executeQuery("Select p.Name,p.Surname,Format(Date ,'yyyy-MM-dd HH:mm') as Date,d.Name,d.Surname ,c.name from  dbo.appointment_T a, dbo.patient_T p,dbo.doctor_T d,clinic_T c where a.Patient_id=p.Personal_id and a.Doctor_id=d.Id and d.Clinic_id=c.Id");
+        rs=stmt.executeQuery("Select p.Name,p.Surname,Date ,cast(Time as nvarchar(5)) as Time ,d.Name,d.Surname ,c.name from  dbo.appointment_T a, dbo.patient_T p,dbo.doctor_T d,clinic_T c where a.Patient_id=p.Personal_id and a.Doctor_id=d.Id and d.Clinic_id=c.Id");
         while(rs.next()){
             String patient=rs.getString(1)+" "+rs.getString(2);
-            String doctor=rs.getString(4)+" "+rs.getString(5);
-            Appointment appointment =new Appointment(patient,rs.getString("Date") , doctor, rs.getString("name"));
+            String doctor=rs.getString(5)+" "+rs.getString(6);
+            Appointment appointment =new Appointment(patient,rs.getString("Date") ,rs.getString("Time") ,doctor, rs.getString("name"));
             appointment_array.add(appointment);
         }
         }catch (Exception e){

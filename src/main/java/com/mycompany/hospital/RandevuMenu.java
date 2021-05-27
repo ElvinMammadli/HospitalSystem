@@ -382,14 +382,14 @@ public class RandevuMenu extends javax.swing.JFrame{
 
             },
             new String [] {
-                "Klinik", "Doktor", "Hasta", "Tarih"
+                "Klinik", "Doktor", "Hasta", "Tarih", "Saat"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -402,7 +402,7 @@ public class RandevuMenu extends javax.swing.JFrame{
         });
         jScrollPane1.setViewportView(jTable_appointment);
         if (jTable_appointment.getColumnModel().getColumnCount() > 0) {
-            jTable_appointment.getColumnModel().getColumn(3).setResizable(false);
+            jTable_appointment.getColumnModel().getColumn(0).setResizable(false);
         }
 
         javax.swing.GroupLayout card2Layout = new javax.swing.GroupLayout(card2);
@@ -442,19 +442,21 @@ public class RandevuMenu extends javax.swing.JFrame{
             try {
                 appointment_array = connectionSQL.getappointments();
                 if(appointment_array!=null){
-            Object row[][] = new Object[appointment_array.size()][4];
+            Object row[][] = new Object[appointment_array.size()][5];
+            
             for(int i=0; i<appointment_array.size(); i++){
                 row[i][0]=appointment_array.get(i).getClinic_name();
                 row[i][1]=appointment_array.get(i).getDoctor_namesurname();
                 row[i][2]=appointment_array.get(i).getPatient_namesurname();
                 row[i][3]=appointment_array.get(i).getDate();
+                row[i][4]=appointment_array.get(i).getTime();
             }
-             jTable_appointment.setModel(new DefaultTableModel(row,new String[]{"Klinik","Doktor","Hasta","Tarih"}));
-
+            jTable_appointment.setModel(new DefaultTableModel(row,new String[]{"Klinik","Doktor","Hasta","Tarih","Saat"}));
+             
 
         }
         else{
-             jTable_appointment.setModel(new DefaultTableModel(null,new String[]{"Klinik","Doktor","Hasta","Tarih"}));
+             jTable_appointment.setModel(new DefaultTableModel(null,new String[]{"Klinik","Doktor","Hasta","Tarih","Saat"}));
         }
             } catch (SQLException ex) {
                 Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -469,13 +471,13 @@ public class RandevuMenu extends javax.swing.JFrame{
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         System.out.println(jYearChooser1.getYear()+" "+jMonthChooser1.getMonth()+" "+jSpinField1.getValue());
-        String test=jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" "+jComboBox_Time.getSelectedItem().toString()+":00";
-        System.out.println(test);
+        String date=jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" ";
+        String time=jComboBox_Time.getSelectedItem().toString()+":00";
         int status=0;
         Doctor doctor =null;
         doctor=doctor_array.get(jComboBox_doctor.getSelectedIndex());
         try {
-            status=connectionSQL.setAppointment(doctor, patient, test);
+            status=connectionSQL.setAppointment(doctor, patient, date, time);
         } catch (SQLException ex) {
             Logger.getLogger(RandevuMenu.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -251,12 +251,15 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Yanlis TC kimlik numarasi Girdiniz");
                 break;
             case 1:
-                RandevuMenu randevuMenu = new RandevuMenu();
+                Appointment_employee appointment_employee= new Appointment_employee(user.getPersonal_id(), user.getPassword());
+                RandevuMenu randevuMenu = new RandevuMenu(appointment_employee);
+
                 setVisible(false);
                 randevuMenu.setVisible(true);
                 break;
             case 2:
-                RegistrationMenu registrationMenu= new RegistrationMenu();
+                Registration_employee registration_employee = new Registration_employee(user.getPersonal_id(), user.getPassword());
+                RegistrationMenu registrationMenu= new RegistrationMenu(registration_employee);
                 setVisible(false);
                 registrationMenu.setVisible(true);
         }

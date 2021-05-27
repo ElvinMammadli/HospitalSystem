@@ -40,29 +40,17 @@ public class ConnectionSQL {
     protected User login(User user) throws SQLException{
         connect();
         stmt=con.createStatement();
-        rs=stmt.executeQuery("SELECT Password,Type FROM dbo.user_T where Personal_id=" +user.getPassport_id());
+        rs=stmt.executeQuery("SELECT Password,Type FROM dbo.user_T where Personal_id=" +user.getPersonal_id());
         if(rs.next()){
             if(user.getPassword().compareTo(rs.getString("Password"))==0){
                 switch(rs.getInt("Type")){
-                    case 3:
-                        rs=stmt.executeQuery("select * from dbo.doctor_T where Personal_id="+user.getPassport_id());
-                        if(rs.next()){
-                            user.setName(rs.getString("Name"));
-                            user.setsurname(rs.getString("Surname"));
-                            user.setClinc_id(rs.getInt("Clinic_id"));
-                            user.setType(3);
-                        }
-                        else
-                            user.setType(-2);
-                        
+                    case 1:
+                        user.setName("Randevu gorevlisi");
+                        user.setType(1);
                         break;
                     case 2:
-                        user.setName("Randevu gorevlisi");
-                        user.setType(2);
-                        break;
-                    case 1:
                         user.setName("Kayit gorevlisi");
-                        user.setType(1);
+                        user.setType(2);
                         break;
                 }
             }

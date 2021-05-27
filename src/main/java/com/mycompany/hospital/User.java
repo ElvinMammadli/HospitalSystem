@@ -9,16 +9,14 @@ package com.mycompany.hospital;
  *
  * @author khagani
  */
-public class User {
+public class User{
     private String name;
-    private String surname;
-    private String passport_id;
-    private int clinc_id;
+    private String Personal_id;
     private int type;
     private String password;
-
-    protected User(String passport_id, String password) {
-        this.passport_id = passport_id;
+    protected ConnectionSQL connectionSQL= new ConnectionSQL();
+    protected User(String Personal_id, String password) {
+        this.Personal_id = Personal_id;
         this.password = password;
     }
 
@@ -30,28 +28,12 @@ public class User {
         this.type = type;
     }
 
-    protected String getsurname() {
-        return surname;
-    }
-
-    protected void setsurname(String surname) {
-        this.surname = surname;
-    }
-
-    protected int getClinc_id() {
-        return clinc_id;
-    }
-
-    protected void setClinc_id(int clinc_id) {
-        this.clinc_id = clinc_id;
-    }
-
     protected String getName() {
         return name;
     }
 
-    protected String getPassport_id() {
-        return passport_id;
+    protected String getPersonal_id() {
+        return Personal_id;
     }
 
     protected int getType() {
@@ -61,5 +43,6 @@ public class User {
     protected String getPassword() {
         return password;
     }
+
     
 }

@@ -62,6 +62,8 @@ public class RegistrationMenu extends javax.swing.JFrame {
         jTextField_HastaTc = new javax.swing.JTextField();
         jTextField_Name = new javax.swing.JTextField();
         jTextField_Surname = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         card2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jComboBox_kullanicilar = new javax.swing.JComboBox<>();
@@ -136,6 +138,14 @@ public class RegistrationMenu extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Isim:");
+
+        jLabel7.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Soy isim:");
+
         javax.swing.GroupLayout card1Layout = new javax.swing.GroupLayout(card1);
         card1.setLayout(card1Layout);
         card1Layout.setHorizontalGroup(
@@ -144,32 +154,42 @@ public class RegistrationMenu extends javax.swing.JFrame {
                 .addGap(80, 80, 80)
                 .addGroup(card1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(card1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(card1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(268, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, card1Layout.createSequentialGroup()
                         .addGroup(card1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(card1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 173, Short.MAX_VALUE)
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jButton3))
                             .addComponent(jTextField_HastaTc, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField_Name, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField_Surname, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jTextField_Surname, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, card1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(69, 69, 69))))
         );
         card1Layout.setVerticalGroup(
             card1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(card1Layout.createSequentialGroup()
-                .addGap(87, 87, 87)
+                .addGap(62, 62, 62)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField_HastaTc, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
                 .addComponent(jTextField_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField_Surname, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         cards.add(card1, "card1");
@@ -342,6 +362,8 @@ public class RegistrationMenu extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox_kullanicilar;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField_HastaTc;

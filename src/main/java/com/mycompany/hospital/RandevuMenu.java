@@ -285,7 +285,7 @@ public class RandevuMenu extends javax.swing.JFrame{
         jLabel10.setText("Gün:");
 
         jButton7.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jButton7.setText("Saat Öner");
+        jButton7.setText("Tarih Seç");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -478,6 +478,7 @@ public class RandevuMenu extends javax.swing.JFrame{
         Doctor doctor =null;
         doctor=doctor_array.get(jComboBox_doctor.getSelectedIndex());
         status=appointment_employee.setAppointment(doctor,patient,date,time);
+        System.out.println(status);
         if(status!=0)
             JOptionPane.showMessageDialog(rootPane, "randevu alindi");
         else
@@ -569,10 +570,17 @@ public class RandevuMenu extends javax.swing.JFrame{
         Doctor doctor= doctor_array.get(jComboBox_doctor.getSelectedIndex());
         ArrayList<String> time=null;
         time=appointment_employee.getTime(String.valueOf(jYearChooser1.getYear()),String.valueOf(jMonthChooser1.getMonth()+1),String.valueOf(jSpinField1.getValue()),doctor);
-        if(time.size()>0)
+        if(time.size()<4)
             setdisableindex(time);
-        else
+        
             System.out.println("else");
+            String date=jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" ";
+
+            String Date= appointment_employee.getDate(date, doctor);
+            if(Date!=null)
+                JOptionPane.showMessageDialog(rootPane, "Seçtiğiniz tarih doludur. Randevu alabileceğiniz en erken tarih:"+Date);
+            //appointment_employee.recommendeddate(jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" ");
+        
     }//GEN-LAST:event_jButton7ActionPerformed
 
     /**

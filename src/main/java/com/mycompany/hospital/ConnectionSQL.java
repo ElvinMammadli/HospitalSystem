@@ -192,4 +192,17 @@ public class ConnectionSQL {
         disconnect();
         return appointment_array;
     }
+    protected String getcount(String Date,Doctor doctor) throws SQLException{
+        connect();
+        String date=null;
+        stmt=con.createStatement();
+        rs=stmt.executeQuery("Select Count(Date) as count, Date  from dbo.appointment_T a where Date >  Convert(Date ,'"+Date+"',0) And Doctor_id=+"+doctor.getId()+" group by Date");
+        if(rs.next()){
+            System.out.println(rs.getInt("count"));
+            if(rs.getInt("count")<10)
+                date=rs.getString("Date");
+        }
+        disconnect();
+        return date;
+    }
 }

@@ -285,7 +285,7 @@ public class RandevuMenu extends javax.swing.JFrame{
         jLabel10.setText("Gün:");
 
         jButton7.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jButton7.setText("Saat Öner");
+        jButton7.setText("Tarih Seç");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -578,7 +578,7 @@ public class RandevuMenu extends javax.swing.JFrame{
 
             String Date= appointment_employee.getDate(date, doctor);
             if(Date!=null)
-                JOptionPane.showMessageDialog(rootPane, "secdigini gunde bos zaman yokdur en yakin uygun tarih "+Date+" sece bilirsiniz");
+                JOptionPane.showMessageDialog(rootPane, "Seçtiğiniz tarih doludur. Randevu alabileceğiniz en erken tarih:"+Date);
             //appointment_employee.recommendeddate(jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" ");
         
     }//GEN-LAST:event_jButton7ActionPerformed

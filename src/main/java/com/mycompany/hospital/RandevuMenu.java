@@ -570,12 +570,17 @@ public class RandevuMenu extends javax.swing.JFrame{
         Doctor doctor= doctor_array.get(jComboBox_doctor.getSelectedIndex());
         ArrayList<String> time=null;
         time=appointment_employee.getTime(String.valueOf(jYearChooser1.getYear()),String.valueOf(jMonthChooser1.getMonth()+1),String.valueOf(jSpinField1.getValue()),doctor);
-        if(time.size()>0)
+        if(time.size()<4)
             setdisableindex(time);
-        else if(time.size()==4){
+        
             System.out.println("else");
+            String date=jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" ";
+
+            String Date= appointment_employee.getDate(date, doctor);
+            if(Date!=null)
+                JOptionPane.showMessageDialog(rootPane, "secdigini gunde bos zaman yokdur en yakin uygun tarih "+Date+" sece bilirsiniz");
             //appointment_employee.recommendeddate(jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" ");
-        }
+        
     }//GEN-LAST:event_jButton7ActionPerformed
 
     /**

@@ -45,4 +45,14 @@ public class Appointment_employee extends User {
         }
         return status;
     }
+    protected String getDate(String Date, Doctor doctor){
+        String date=null;
+        try{
+            date=connectionSQL.getcount(Date, doctor);
+            
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+        return  date;
+    }
 }

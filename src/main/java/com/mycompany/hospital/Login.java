@@ -21,6 +21,7 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Login() {
+       
         /*try {
             ArrayList<String> time=connectionSQL.getTime("2021", "5", "20");
             for(int i=0; i<time.size(); i++)

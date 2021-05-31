@@ -478,6 +478,7 @@ public class RandevuMenu extends javax.swing.JFrame{
         Doctor doctor =null;
         doctor=doctor_array.get(jComboBox_doctor.getSelectedIndex());
         status=appointment_employee.setAppointment(doctor,patient,date,time);
+        System.out.println(status);
         if(status!=0)
             JOptionPane.showMessageDialog(rootPane, "randevu alindi");
         else
@@ -571,8 +572,10 @@ public class RandevuMenu extends javax.swing.JFrame{
         time=appointment_employee.getTime(String.valueOf(jYearChooser1.getYear()),String.valueOf(jMonthChooser1.getMonth()+1),String.valueOf(jSpinField1.getValue()),doctor);
         if(time.size()>0)
             setdisableindex(time);
-        else
+        else if(time.size()==4){
             System.out.println("else");
+            //appointment_employee.recommendeddate(jYearChooser1.getYear()+"-"+(jMonthChooser1.getMonth()+1)+"-"+jSpinField1.getValue()+" ");
+        }
     }//GEN-LAST:event_jButton7ActionPerformed
 
     /**

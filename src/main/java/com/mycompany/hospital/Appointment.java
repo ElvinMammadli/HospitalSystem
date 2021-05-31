@@ -24,23 +24,23 @@ public class Appointment {
         this.clinic_name = clinic_name;
     }
 
-    public String getPatient_namesurname() {
+    protected String getPatient_namesurname() {
         return patient_namesurname;
     }
 
-    public String getTime() {
+    protected String getTime() {
         return time;
     }
 
-    public String getDate() {
+    protected String getDate() {
         return date;
     }
 
-    public String getDoctor_namesurname() {
+    protected String getDoctor_namesurname() {
         return doctor_namesurname;
     }
 
-    public String getClinic_name() {
+    protected String getClinic_name() {
         return clinic_name;
     }
     
